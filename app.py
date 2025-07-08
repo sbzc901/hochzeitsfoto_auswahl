@@ -69,12 +69,13 @@ if uploaded_files:
                 image_paths.append(path)
 
             results = []
-            with ThreadPoolExecutor(max_workers=8) as executor:
-                futures = [executor.submit(process_image, p) for p in image_paths]
-                for future in st.progress(0).container():
-                    for i, f in enumerate(as_completed(futures)):
-                        results.append(f.result())
-                        st.progress((i+1)/len(futures))
+with ThreadPoolExecutor(max_workers=8) as executor:
+    futures = [executor.submit(process_image, p) for p in image_paths]
+    progress_bar = st.progress(0)
+    for i, f in enumerate(as_completed(futures)):
+        results.append(f.result())
+        progress_bar.progress((i + 1) / len(futures))
+
 
             results.sort(key=lambda x: x[1], reverse=True)
             top_paths = [r[0] for r in results[:TOP_N]]
