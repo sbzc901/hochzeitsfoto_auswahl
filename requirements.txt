@@ -5,4 +5,4 @@ numpy
 matplotlib
 opencv-python-headless
 deepface==0.0.75
-
+tensorflow==2.12.0
