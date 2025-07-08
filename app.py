@@ -61,17 +61,15 @@ if uploaded_files:
             output_dir = os.path.join(temp_dir, "output")
             os.makedirs(input_dir, exist_ok=True)
             os.makedirs(output_dir, exist_ok=True)
-
             st.write(f"⏳ Verarbeite {len(uploaded_files)} Bilder...")
-
+            
             image_paths = []
             for file in uploaded_files:
                 path = os.path.join(input_dir, file.name)
-            with open(path, "wb") as f:
+                with open(path, "wb") as f:
                     f.write(file.read())
                 image_paths.append(path)
             
-            # Diese Zeilen müssen richtig eingerückt sein (12 Leerzeichen)
             results = []
             with ThreadPoolExecutor(max_workers=8) as executor:
                 futures = [executor.submit(process_image, p) for p in image_paths]
@@ -79,25 +77,25 @@ if uploaded_files:
                 for i, f in enumerate(as_completed(futures)):
                     results.append(f.result())
                     progress_bar.progress((i + 1) / len(futures))
-    
-    # Diese Zeilen müssen NACH der for-Schleife stehen (weniger eingerückt)
-    results.sort(key=lambda x: x[1], reverse=True)
-    top_paths = [r[0] for r in results[:TOP_N]]
-    for path in top_paths:
-        shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
-    
-    # Anzeige der besten Bilder
-    st.success(f"🎉 Fertig! Die besten {TOP_N} Bilder wurden ausgewählt.")
-    cols = st.columns(5)
-    for i, path in enumerate(top_paths[:20]):
-        with cols[i % 5]:
-            st.image(path, use_column_width=True)
-
+            
+            # Diese Zeilen stehen NACH dem ThreadPoolExecutor (12 Leerzeichen)
+            results.sort(key=lambda x: x[1], reverse=True)
+            top_paths = [r[0] for r in results[:TOP_N]]
+            for path in top_paths:
+                shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
+            
+            # Anzeige der besten Bilder
+            st.success(f"🎉 Fertig! Die besten {TOP_N} Bilder wurden ausgewählt.")
+            cols = st.columns(5)
+            for i, path in enumerate(top_paths[:20]):
+                with cols[i % 5]:
+                    st.image(path, use_column_width=True)
+            
             # ZIP-Datei erstellen
             zip_path = os.path.join(temp_dir, "top_bilder.zip")
             with zipfile.ZipFile(zip_path, "w") as zipf:
                 for file in os.listdir(output_dir):
                     zipf.write(os.path.join(output_dir, file), arcname=file)
-
+            
             with open(zip_path, "rb") as f:
                 st.download_button("📦 ZIP-Datei herunterladen", f, file_name="Top_Bilder.zip")
