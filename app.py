@@ -30,7 +30,9 @@ def process_image(path):
         score = 0
         if not is_blurry(image):
             score += 1
-
+def process_image(path):  
+    try:
+        score = 0
         result = DeepFace.analyze(img_path=path, actions=['emotion'], enforce_detection=False)
         if isinstance(result, list):
             result = result[0]
