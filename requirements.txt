@@ -4,3 +4,4 @@ pandas
 numpy
 matplotlib
 opencv-python-headless
+deepface
