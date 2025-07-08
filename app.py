@@ -4,7 +4,7 @@ import cv2
 import zipfile
 import shutil
 import numpy as np
-import face_recognition
+from deepface import DeepFace
 from tempfile import TemporaryDirectory
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
