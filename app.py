@@ -26,13 +26,14 @@ def process_image(path):
         image = cv2.imread(path)
         if image is None:
             return path, 0
-
+        
         score = 0
+        
+        # Blur-Check
         if not is_blurry(image):
             score += 1
-def process_image(path):  
-    try:
-        score = 0
+        
+        # DeepFace Emotion Analysis
         result = DeepFace.analyze(img_path=path, actions=['emotion'], enforce_detection=False)
         if isinstance(result, list):
             result = result[0]
@@ -41,7 +42,7 @@ def process_image(path):
             score += 2
         else:
             score += 1
-
+            
         return path, score
     except:
         return path, 0
