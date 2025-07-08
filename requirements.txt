@@ -4,4 +4,5 @@ pandas
 numpy
 matplotlib
 opencv-python-headless
-deepface
+deepface==0.0.75
+
