@@ -67,17 +67,18 @@ if uploaded_files:
             image_paths = []
             for file in uploaded_files:
                 path = os.path.join(input_dir, file.name)
-                with open(path, "wb") as f:
+            with open(path, "wb") as f:
                     f.write(file.read())
                 image_paths.append(path)
-
-          results = []
-with ThreadPoolExecutor(max_workers=8) as executor:
-    futures = [executor.submit(process_image, p) for p in image_paths]
-    progress_bar = st.progress(0)
-    for i, f in enumerate(as_completed(futures)):
-        results.append(f.result())
-        progress_bar.progress((i + 1) / len(futures))
+            
+            # Diese Zeilen müssen richtig eingerückt sein (12 Leerzeichen)
+            results = []
+            with ThreadPoolExecutor(max_workers=8) as executor:
+                futures = [executor.submit(process_image, p) for p in image_paths]
+                progress_bar = st.progress(0)
+                for i, f in enumerate(as_completed(futures)):
+                    results.append(f.result())
+                    progress_bar.progress((i + 1) / len(futures))
     
     # Diese Zeilen müssen NACH der for-Schleife stehen (weniger eingerückt)
     results.sort(key=lambda x: x[1], reverse=True)
