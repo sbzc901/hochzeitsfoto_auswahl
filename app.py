@@ -68,27 +68,26 @@ if uploaded_files:
                     f.write(file.read())
                 image_paths.append(path)
 
-            results = []
+          results = []
 with ThreadPoolExecutor(max_workers=8) as executor:
     futures = [executor.submit(process_image, p) for p in image_paths]
     progress_bar = st.progress(0)
     for i, f in enumerate(as_completed(futures)):
         results.append(f.result())
         progress_bar.progress((i + 1) / len(futures))
-
-
-            results.sort(key=lambda x: x[1], reverse=True)
-            top_paths = [r[0] for r in results[:TOP_N]]
-
-            for path in top_paths:
-                shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
-
-            # Anzeige der besten Bilder
-            st.success(f"🎉 Fertig! Die besten {TOP_N} Bilder wurden ausgewählt.")
-            cols = st.columns(5)
-            for i, path in enumerate(top_paths[:20]):
-                with cols[i % 5]:
-                    st.image(path, use_column_width=True)
+    
+    # Diese Zeilen müssen NACH der for-Schleife stehen (weniger eingerückt)
+    results.sort(key=lambda x: x[1], reverse=True)
+    top_paths = [r[0] for r in results[:TOP_N]]
+    for path in top_paths:
+        shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
+    
+    # Anzeige der besten Bilder
+    st.success(f"🎉 Fertig! Die besten {TOP_N} Bilder wurden ausgewählt.")
+    cols = st.columns(5)
+    for i, path in enumerate(top_paths[:20]):
+        with cols[i % 5]:
+            st.image(path, use_column_width=True)
 
             # ZIP-Datei erstellen
             zip_path = os.path.join(temp_dir, "top_bilder.zip")
