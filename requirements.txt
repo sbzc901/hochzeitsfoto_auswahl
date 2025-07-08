@@ -1,11 +1,9 @@
-pip>=24.0
-setuptools<70.0
-Pillow==10.2.0
 streamlit==1.35.0
 pandas==2.2.2
 numpy==1.26.4
 matplotlib==3.8.4
 scikit-learn==1.5.0
+Pillow>=10.0.0
 opencv-python-headless==4.8.1.78
+tensorflow==2.15.0
 deepface==0.0.91
-tensorflow-cpu==2.15.0
