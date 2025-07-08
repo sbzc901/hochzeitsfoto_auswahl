@@ -4,7 +4,7 @@ import cv2
 import zipfile
 import shutil
 import numpy as np
-# import face_recognition
+from deepface import DeepFace
 from tempfile import TemporaryDirectory
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -34,19 +34,20 @@ def process_image(path):
             score += 1
         
         # DeepFace Emotion Analysis
-       # result = DeepFace.analyze(img_path=path, actions=['emotion'], enforce_detection=False)
-       # if isinstance(result, list):
-       #     result = result[0]
-      #  emotion = result.get('dominant_emotion', '')
-      #  if emotion in ['happy', 'surprise']:
-       #     score += 2
-     #   else:
-      #      score += 1
-            # Für jetzt einfach einen Standard-Score geben
+       try:
+           result = DeepFace.analyze(img_path=path, actions=['emotion'], enforce_detection=False)
+        if isinstance(result, list):
+            result = result[0]
+        emotion = result.get('dominant_emotion', '')
+        if emotion in ['happy', 'surprise']:
+            score += 2
+        else:
+            score += 1
+except Exception as e:
         score += 1
 
         return path, score
-    except:
+except Excetion as e: 
         return path, 0
 
 # Datei-Upload
